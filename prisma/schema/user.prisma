@@ -7,7 +7,7 @@ model User {
   status     UserStatus       @default(ACTIVE)
   phone      String?          @db.VarChar(20)
 
-//   properties  Property[]
+  properties  Property[]
 //   rentals     RentalRequest[]
 //   reviews     Review[]
 

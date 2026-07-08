@@ -77,6 +77,7 @@ const logUser = async (payload: IUserLogin) => {
         config.jwt_refresh_secret,
         config.jwt_refresh_expires_in as SignOptions
     );
+    
     return {
         accessToken,
         refreshToken
@@ -87,5 +88,6 @@ const logUser = async (payload: IUserLogin) => {
 
 
 export const authService = {
-    createUserIntoDB
+    createUserIntoDB,
+    logUser
 }

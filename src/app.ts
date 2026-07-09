@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors"
 import config from "./config";
 import { authRouter } from "./modules/auth/auth.route";
+import { propertyRoute } from "./modules/properties/properties.route";
 
 const app: Application = express();
 
@@ -20,5 +21,6 @@ app.get("/", async (req: Request, res: Response) => {
 })
 
 app.use("/api/auth", authRouter)
+app.use("/api", propertyRoute)
 
 export default app;

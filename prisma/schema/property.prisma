@@ -4,7 +4,7 @@ model Property {
     description  String
     address      String
     city         String
-    rent         Decimal
+    price        Decimal
     bedrooms     Int
     bathrooms    Int
     availability Boolean    @default(true)

@@ -40,7 +40,7 @@ const createUserIntoDB = async (payload: IRegisterUser) => {
     return user;
 }
 
-const logUser = async (payload: IUserLogin) => {
+const loginUser = async (payload: IUserLogin) => {
     const { email, password } = payload;
 
     const user = await prisma.user.findUniqueOrThrow({
@@ -89,5 +89,5 @@ const logUser = async (payload: IUserLogin) => {
 
 export const authService = {
     createUserIntoDB,
-    logUser
+    loginUser
 }

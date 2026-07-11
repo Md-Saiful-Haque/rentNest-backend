@@ -29,7 +29,36 @@ const getAllProperties = catchAsync(async (req: Request, res: Response) => {
     })
 });
 
+const getPropertyById = catchAsync(async (req: Request, res: Response) => {
+    const propertyId = req.params.id;
+    const property = await propertyService.getPropertyById(propertyId as string);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Properties Retrieved Successfully",
+        data: property
+    });
+});
+
+const updateProperty = catchAsync(async (req: Request, res: Response) => {
+    const landlordId = req.user?.id;
+    const propertyId = req.params.id;
+    const payload = req.body;
+
+    const result = await propertyService.updateProperty(propertyId as string, landlordId as string, payload);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Post updated successfully",
+        data: result
+    })
+});
+
 export const propertyController = {
     createProperty,
-    getAllProperties
+    getAllProperties,
+    getPropertyById,
+    updateProperty
 }

@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { FilterProperty, PropertyInput } from "./properties.interface";
+import { FilterProperty, IUpdateProperty, PropertyInput } from "./properties.interface";
 
 export const createProperty = async (landlordId: string, data: PropertyInput) => {
 
@@ -68,8 +68,46 @@ const getAllProperties = async (filters: FilterProperty) => {
     });
 };
 
+const getPropertyById = async (id: string) => {
+    const property = await prisma.property.findUnique({
+        where: { id },
+        include: {
+            category: true,
+            landlord: { select: { id: true, name: true, phone: true, email: true } },
+            reviews: {
+                include: { tenant: { select: { id: true, name: true } } },
+            },
+        },
+    });
+
+    if (!property) {
+        throw new Error('Property not found')
+    }
+
+    return property;
+};
+
+const updateProperty = async (propertyId: string, landlordId: string, data: IUpdateProperty) => {
+    const property = await prisma.property.findUnique({ where: { id: propertyId } });
+
+    if (!property) {
+        throw new Error('Property not found');
+    }
+
+    if (property.landlordId !== landlordId) {
+       throw new Error('You are not authorized to update this property');
+    }
+
+    return prisma.property.update({
+        where: { id: propertyId },
+        data,
+    });
+};
+
 
 export const propertyService = {
     createProperty,
-    getAllProperties
+    getAllProperties,
+    getPropertyById,
+    updateProperty
 }

@@ -95,7 +95,7 @@ const updateProperty = async (propertyId: string, landlordId: string, data: IUpd
     }
 
     if (property.landlordId !== landlordId) {
-       throw new Error('You are not authorized to update this property');
+        throw new Error('You are not authorized to update this property');
     }
 
     return prisma.property.update({
@@ -104,10 +104,33 @@ const updateProperty = async (propertyId: string, landlordId: string, data: IUpd
     });
 };
 
+const deleteProperty = async (propertyId: string, landlordId: string) => {
+    const property = await prisma.property.findUnique({ where: { id: propertyId } });
+
+    if (!property) {
+        throw new Error('Property not found');
+    }
+
+    if (property.landlordId !== landlordId) {
+        throw new Error('You are not authorized to update this property');
+    }
+
+    return prisma.property.delete({ where: { id: propertyId } });
+};
+
+const getLandlordProperties = async (landlordId: string) => {
+    return prisma.property.findMany({
+        where: { landlordId },
+        include: { category: true }
+    });
+};
+
 
 export const propertyService = {
     createProperty,
     getAllProperties,
     getPropertyById,
-    updateProperty
+    updateProperty,
+    deleteProperty,
+    getLandlordProperties
 }

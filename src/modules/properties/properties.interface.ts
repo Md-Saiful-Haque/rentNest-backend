@@ -1,4 +1,4 @@
-import { PropertyWhereInput } from "../../../generated/prisma/models";
+
 
 export interface PropertyInput {
   title: string;
@@ -12,8 +12,10 @@ export interface PropertyInput {
   amenities?: string[];
 }
 
-export interface IPropertyQuery extends PropertyWhereInput {
-    sortby?: string 
-    sortOrder?: string,
-    searchTerm?: string
+export interface FilterProperty {
+  location?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  categoryId?: string;
+  bedrooms?: string;
 }

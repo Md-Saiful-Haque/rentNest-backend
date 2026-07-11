@@ -23,6 +23,6 @@ app.get("/", async (req: Request, res: Response) => {
 
 app.use("/api/auth", authRouter)
 app.use('/api/categories', categoryRoute);
-app.use("/api", propertyRoute)
+app.use("/api/properties", propertyRoute)
 
 export default app;

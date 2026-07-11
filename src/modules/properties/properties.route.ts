@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import { propertyController } from './properties.controller';
+import { auth } from '../../middlewares/auth';
 
 
 const router = Router();
 
-router.get('/properties', propertyController.getAllProperties);
-// router.get('/technicians', serviceController.getAllTechnicians);
-// router.get('/technicians/:id', serviceController.getSingleTechnician);
-// router.get('/categories', serviceController.getAllCategories);
+router.post('/', auth("LANDLORD"), propertyController.createProperty);
+
 
 export const propertyRoute = router;

@@ -1,20 +1,22 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { propertyService } from "./properties.service";
 import { sendResponse } from "../../utils/sendResponse";
-import  httpStatus  from 'http-status';
+import httpStatus from 'http-status';
 
-const getAllProperties = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const query = req.query
-    const result = await propertyService.getAllProperties(query)
-    sendResponse(res, {
+export const createProperty = catchAsync(async (req: Request, res: Response) => {
+  const landlordId = req.user?.id;
+
+  const property = await propertyService.createProperty(landlordId as string, req.body);
+  
+  sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
-        message: "All services retrieved successfully",
-        data: result
+        message: "Property created successfully",
+        data: property
     })
 });
 
 export const propertyController = {
-    getAllProperties
+    createProperty
 }

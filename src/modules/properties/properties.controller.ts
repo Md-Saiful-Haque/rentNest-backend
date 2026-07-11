@@ -4,12 +4,12 @@ import { propertyService } from "./properties.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from 'http-status';
 
-export const createProperty = catchAsync(async (req: Request, res: Response) => {
-  const landlordId = req.user?.id;
+const createProperty = catchAsync(async (req: Request, res: Response) => {
+    const landlordId = req.user?.id;
 
-  const property = await propertyService.createProperty(landlordId as string, req.body);
-  
-  sendResponse(res, {
+    const property = await propertyService.createProperty(landlordId as string, req.body);
+
+    sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
         message: "Property created successfully",
@@ -17,6 +17,19 @@ export const createProperty = catchAsync(async (req: Request, res: Response) => 
     })
 });
 
+const getAllProperties = catchAsync(async (req: Request, res: Response) => {
+    const query = req.query;
+    const properties = await propertyService.getAllProperties(query);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Properties Retrieved Successfully",
+        data: properties
+    })
+});
+
 export const propertyController = {
-    createProperty
+    createProperty,
+    getAllProperties
 }

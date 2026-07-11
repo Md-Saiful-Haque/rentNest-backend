@@ -8,3 +8,11 @@ enum UserStatus {
   ACTIVE
   BANNED
 }
+
+enum RentalRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ACTIVE
+  COMPLETED
+}

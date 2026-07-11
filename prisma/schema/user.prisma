@@ -8,7 +8,7 @@ model User {
   phone      String?          @db.VarChar(20)
 
   properties  Property[]
-//   rentals     RentalRequest[]
+  rentals     RentalRequest[] @relation("TenantRentalRequests")
   reviews     Review[]
 
   createdAt   DateTime @default(now())

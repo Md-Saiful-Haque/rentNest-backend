@@ -4,7 +4,7 @@ model Property {
     description  String
     address      String
     city         String
-    price        Decimal
+    price        Float
     bedrooms     Int
     bathrooms    Int
     availability Boolean    @default(true)
@@ -15,7 +15,7 @@ model Property {
     landlord User @relation(fields: [landlordId], references: [id])
     category Category @relation(fields: [categoryId], references: [id])
 
-    // rentals RentalRequest[]
+    rentals RentalRequest[]
     reviews Review[]
 
     createdAt DateTime @default(now())

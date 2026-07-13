@@ -70,9 +70,27 @@ const getLandlordRentalRequest = async (landlordId: string) => {
     });
 };
 
+const getRentalRequestById = async (id: string) => {
+    const request = await prisma.rentalRequest.findUnique({
+        where: { id },
+        include: {
+            property: true,
+            tenant: { select: { id: true, name: true, email: true, phone: true } },
+            payment: true,
+        },
+    });
+
+    if (!request) {
+        throw new Error('Rental request not found');
+    }
+
+    return request;
+};
+
 
 export const rentalService = {
     createRentalRequest,
     getRentalRequest,
-    getLandlordRentalRequest
+    getLandlordRentalRequest,
+    getRentalRequestById
 }

@@ -10,6 +10,8 @@ router.get('/', auth(Role.TENANT), rentalController.getRentalRequest)
 // Get all rental requests for landlord's properties
 router.get('/landlord-requests', auth(Role.LANDLORD), rentalController.getLandlordRequest)
 
+router.get('/:id', rentalController.getRentalRequestById)
+
 router.post('/', auth(Role.TENANT), rentalController.createRentalRequest)
 
 export const rentalRoute = router;

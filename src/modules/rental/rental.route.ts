@@ -14,4 +14,6 @@ router.get('/:id', rentalController.getRentalRequestById)
 
 router.post('/', auth(Role.TENANT), rentalController.createRentalRequest)
 
+router.patch('/:id', auth(Role.LANDLORD), rentalController.updateRentalRequestStatus)
+
 export const rentalRoute = router;

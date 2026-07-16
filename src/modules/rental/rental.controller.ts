@@ -54,9 +54,25 @@ const getRentalRequestById = catchAsync(async (req: Request, res: Response) => {
     })
 });
 
+const updateRentalRequestStatus = catchAsync(async (req: Request, res: Response) => {
+    const landlordId = req.user?.id;
+    const { status } = req.body;
+    const rentalId = req.params.id
+
+    const result = await rentalService.updateRentalRequestStatus(rentalId as string, landlordId as string, status);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: `Rental request ${status.toLowerCase()} successfully`,
+        data: result
+    })
+});
+
 export const rentalController = {
     createRentalRequest,
     getRentalRequest,
     getLandlordRequest,
-    getRentalRequestById
+    getRentalRequestById,
+    updateRentalRequestStatus
 }

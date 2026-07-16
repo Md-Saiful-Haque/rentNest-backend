@@ -87,10 +87,56 @@ const getRentalRequestById = async (id: string) => {
     return request;
 };
 
+const updateRentalRequestStatus = async (
+  rentalId: string,
+  landlordId: string,
+  status: 'APPROVED' | 'REJECTED'
+) => {
+  const request = await prisma.rentalRequest.findUnique({
+    where: { id: rentalId },
+    include: { property: true },
+  });
+
+  if (!request) {
+    const error: any = new Error('Rental request not found');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (request.property.landlordId !== landlordId) {
+    const error: any = new Error('You are not authorized to update this request');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  if (request.status !== 'PENDING') {
+    const error: any = new Error(`This request has already been ${request.status.toLowerCase()}`);
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const updatedRequest = await prisma.rentalRequest.update({
+    where: { id: rentalId },
+    data: { status },
+  });
+
+  
+  if (status === 'APPROVED') {
+    await prisma.property.update({
+      where: { id: request.propertyId },
+      data: { availability: false },
+    });
+  }
+
+  return updatedRequest;
+};
+
+
 
 export const rentalService = {
     createRentalRequest,
     getRentalRequest,
     getLandlordRentalRequest,
-    getRentalRequestById
+    getRentalRequestById,
+    updateRentalRequestStatus
 }

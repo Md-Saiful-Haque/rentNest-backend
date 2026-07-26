@@ -11,4 +11,6 @@ router.post('/confirm', auth(Role.TENANT), paymentController.confirmPayment)
 
 router.get('/', auth(Role.TENANT), paymentController.getMyPayments)
 
+router.get('/:id', auth(Role.TENANT), paymentController.getPaymentById)
+
 export const paymentRoute = router;

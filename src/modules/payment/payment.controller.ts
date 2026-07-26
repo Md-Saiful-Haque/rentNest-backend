@@ -30,7 +30,7 @@ const createPaymentIntent = catchAsync(async (req: Request, res: Response) => {
     })
 });
 
-const confirmPayment = catchAsync(async (req, res) => {
+const confirmPayment = catchAsync(async (req: Request, res: Response) => {
 
     const result = await paymentService.confirmPayment(
         req.body.sessionId
@@ -42,24 +42,38 @@ const confirmPayment = catchAsync(async (req, res) => {
         message: "Payment confirmed successfully",
         data: result,
     });
-
 });
 
-const getMyPayments = catchAsync(async (req, res) => {
-  const tenantId = req.user!.id;
+const getMyPayments = catchAsync(async (req: Request, res: Response) => {
+    const tenantId = req.user?.id;
 
-  const result = await paymentService.getMyPayments(tenantId);
+    const result = await paymentService.getMyPayments(tenantId as string);
 
-  sendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: "Payment history retrieved successfully",
-    data: result,
-  });
+    sendResponse(res, {
+        success: true,
+        statusCode: 200,
+        message: "Payment history retrieved successfully",
+        data: result,
+    });
+});
+
+const getPaymentById = catchAsync(async (req: Request, res: Response) => {
+    const tenantId = req.user?.id;
+    const paymentId = req.params.id;
+
+    const result = await paymentService.getPaymentById(tenantId as string, paymentId as string);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: 200,
+        message: "Payment retrieved successfully",
+        data: result,
+    });
 });
 
 export const paymentController = {
     createPaymentIntent,
     confirmPayment,
-    getMyPayments
+    getMyPayments,
+    getPaymentById
 } 

@@ -238,9 +238,55 @@ const getMyPayments = async (tenantId: string) => {
   });
 };
 
+const getPaymentById = async (
+  tenantId: string,
+  paymentId: string
+) => {
+
+  const payment = await prisma.payment.findUnique({
+    where: {
+      id: paymentId,
+    },
+    include: {
+      rentalRequest: {
+        include: {
+          property: {
+            include: {
+              category: true,
+              landlord: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  phone: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!payment) {
+    const error: any = new Error("Payment not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (payment.rentalRequest.tenantId !== tenantId) {
+    const error: any = new Error("Unauthorized");
+    error.statusCode = 403;
+    throw error;
+  }
+
+  return payment;
+};
+
 export const paymentService = {
   // createPaymentIntent
   createCheckoutSession,
   confirmPayment,
-  getMyPayments
+  getMyPayments,
+  getPaymentById
 }

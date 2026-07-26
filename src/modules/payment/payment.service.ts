@@ -165,11 +165,57 @@ const createCheckoutSession = async (
   });
 
   return {
+    sessionId: session.id,
     url: session.url,
+  };
+};
+
+const confirmPayment = async (sessionId: string) => {
+
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+  if (!session) {
+    throw new Error("Checkout session not found");
+  }
+
+  if (session.payment_status !== "paid") {
+    throw new Error("Payment has not been completed");
+  }
+
+  const rentalRequestId = session.metadata?.rentalRequestId;
+
+  if (!rentalRequestId) {
+    throw new Error("Rental request id not found");
+  }
+
+  await prisma.payment.update({
+    where: {
+      rentalRequestId,
+    },
+    data: {
+      status: PaymentStatus.COMPLETED,
+      transactionId: session.payment_intent as string,
+      paidAt: new Date(),
+    },
+  });
+
+  await prisma.rentalRequest.update({
+    where: {
+      id: rentalRequestId,
+    },
+    data: {
+      status: RentalRequestStatus.ACTIVE,
+    },
+  });
+
+  return {
+    paymentStatus: "COMPLETED",
+    rentalStatus: "ACTIVE",
   };
 };
 
 export const paymentService = {
   // createPaymentIntent
-  createCheckoutSession
+  createCheckoutSession,
+  confirmPayment
 }

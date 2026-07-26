@@ -7,4 +7,6 @@ const router = Router()
 
 router.post('/create', auth(Role.TENANT), paymentController.createPaymentIntent)
 
+router.post('/confirm', auth(Role.TENANT), paymentController.confirmPayment)
+
 export const paymentRoute = router;

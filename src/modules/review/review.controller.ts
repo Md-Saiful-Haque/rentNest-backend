@@ -18,6 +18,6 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
 
 });
 
-export const ReviewController = {
+export const reviewController = {
     createReview
 };

@@ -45,7 +45,21 @@ const confirmPayment = catchAsync(async (req, res) => {
 
 });
 
+const getMyPayments = catchAsync(async (req, res) => {
+  const tenantId = req.user!.id;
+
+  const result = await paymentService.getMyPayments(tenantId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Payment history retrieved successfully",
+    data: result,
+  });
+});
+
 export const paymentController = {
     createPaymentIntent,
-    confirmPayment
+    confirmPayment,
+    getMyPayments
 } 

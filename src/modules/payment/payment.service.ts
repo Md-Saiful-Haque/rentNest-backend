@@ -214,8 +214,33 @@ const confirmPayment = async (sessionId: string) => {
   };
 };
 
+const getMyPayments = async (tenantId: string) => {
+  return prisma.payment.findMany({
+    where: {
+      rentalRequest: {
+        tenantId,
+      },
+    },
+    include: {
+      rentalRequest: {
+        include: {
+          property: {
+            include: {
+              category: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+};
+
 export const paymentService = {
   // createPaymentIntent
   createCheckoutSession,
-  confirmPayment
+  confirmPayment,
+  getMyPayments
 }

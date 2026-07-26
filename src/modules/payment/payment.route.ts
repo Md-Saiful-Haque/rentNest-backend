@@ -9,4 +9,6 @@ router.post('/create', auth(Role.TENANT), paymentController.createPaymentIntent)
 
 router.post('/confirm', auth(Role.TENANT), paymentController.confirmPayment)
 
+router.get('/', auth(Role.TENANT), paymentController.getMyPayments)
+
 export const paymentRoute = router;

@@ -31,7 +31,7 @@ const updateUserStatus = async (userId: string, status: UserStatus) => {
   }
 
   if (user.role === "ADMIN") {
-    throw new Error("Admin account cannot be banned"); 
+    throw new Error("Admin account cannot be banned");
   }
 
   return prisma.user.update({
@@ -51,7 +51,63 @@ const updateUserStatus = async (userId: string, status: UserStatus) => {
   });
 };
 
+const getAllProperties = async () => {
+
+  return prisma.property.findMany({
+    include: {
+      category: true,
+      landlord: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+};
+
+const getAllRentals = async () => {
+
+  return prisma.rentalRequest.findMany({
+    include: {
+      tenant: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+        },
+      },
+      property: {
+        include: {
+          category: true,
+          landlord: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+      payment: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+};
+
 export const adminService = {
   getAllUsers,
-  updateUserStatus
+  updateUserStatus,
+  getAllProperties,
+  getAllRentals
 };
